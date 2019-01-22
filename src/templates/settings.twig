@@ -1,0 +1,41 @@
+{% import '_includes/forms' as forms %}
+
+{% macro configWarning(setting) -%}
+    {% set docsUrl = 'https://www.doublesecretagency.com/plugins/view-count/docs/override-settings' %}
+    <p class="warning">
+        {{ "This is being overridden by the {setting} config setting."|t('app', {
+            setting: '<a href="'~docsUrl~'" target="_blank">'~setting~'</a>'
+        })|raw }}
+    </p>
+{%- endmacro %}
+{% from _self import configWarning %}
+
+{% css %}
+    #content code {
+        color: #476582;
+        padding: .25rem .5rem;
+        margin: 0;
+        font-size: .85em;
+        background-color: rgba(27,31,35,.05);
+        background: rgba(0,72.85714285714286,127.5,.054901960784314);
+        border-radius: 3px;
+    }
+{% endcss %}
+
+<h2>Complete View Log</h2>
+
+{{ forms.checkbox({
+    label: "<strong>Keep a detailed record of all views</strong>"|t,
+    id: 'keepViewLog',
+    name: 'keepViewLog',
+    checked: settings.keepViewLog,
+    disabled: 'keepViewLog' in overrideKeys
+}) }}
+
+{{ 'keepViewLog' in overrideKeys ? configWarning('keepViewLog') }}
+
+<p>Generally unnecessary... The detailed log is not used to calculate the total views for each element.</p>
+<ul>
+    <li><strong>PRO:</strong> You have a detailed log of every view, which can then be accessed by another plugin via: <code>doublesecretagency\viewcount\records\ElementTotal</code></li>
+    <li><strong>CON:</strong> Any time Craft needs to create a backup database, it could take a very long time (depending on how big the views table gets).</li>
+</ul>
