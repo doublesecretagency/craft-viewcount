@@ -15,6 +15,8 @@ use Craft;
 use craft\web\Controller;
 
 use doublesecretagency\viewcount\ViewCount;
+use yii\web\BadRequestHttpException;
+use yii\web\Response;
 
 /**
  * Class IncrementController
@@ -23,8 +25,22 @@ use doublesecretagency\viewcount\ViewCount;
 class IncrementController extends Controller
 {
 
-    // Increment view counter
-    public function actionIndex()
+    // Protected Properties
+    // =========================================================================
+
+    /**
+     * @var    bool|array Allows anonymous access to this controller's actions.
+     * @access protected
+     */
+    protected $allowAnonymous = true;
+
+    /**
+     * Increment view counter.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     */
+    public function actionIndex(): Response
     {
         $this->requirePostRequest();
 
