@@ -152,7 +152,7 @@ class View extends Component
         }
 
         // If item has never been viewed, initialize key
-        if (!array_key_exists($item, $history)) {
+        if (!isset($history[$item])) {
             $history[$item] = 0;
         }
 
@@ -176,7 +176,7 @@ class View extends Component
         $history =& ViewCount::$plugin->viewCount->anonymousHistory;
 
         // If item has never been viewed, initialize key
-        if (!array_key_exists($item, $history)) {
+        if (!isset($history[$item])) {
             $history[$item] = 0;
         }
 
