@@ -107,7 +107,15 @@ class TotalViews extends Field implements PreviewableFieldInterface
      */
     private function _getTotal($element): float
     {
+        // If no element, return value of zero
+        if (!$element) {
+            return 0;
+        }
+
+        // Get the view key (if one exists)
         $viewKey = ($this->viewKey ? $this->viewKey : null);
+
+        // Return the view total
         return ViewCount::$plugin->query->total($element->id, $viewKey);
     }
 

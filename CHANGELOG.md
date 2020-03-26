@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.3 - 2020-03-26
+
+### Fixed
+- Guard against missing elements.
+
 ## 1.0.2 - 2020-02-08
 
 ### Fixed
