@@ -2,7 +2,7 @@
     "name": "doublesecretagency/craft-viewcount",
     "description": "Count the number of times an element has been viewed.",
     "type": "craft-plugin",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "keywords": [
         "craft",
         "cms",
@@ -24,7 +24,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.0"
+        "craftcms/cms": "^3.5"
     },
     "autoload": {
         "psr-4": {

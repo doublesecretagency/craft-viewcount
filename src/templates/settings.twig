@@ -25,7 +25,7 @@
 <h2>Complete View Log</h2>
 
 {{ forms.checkbox({
-    label: "<strong>Keep a detailed record of all views</strong>"|t,
+    label: raw("<strong>Keep a detailed record of all views</strong>"|t),
     id: 'keepViewLog',
     name: 'keepViewLog',
     checked: settings.keepViewLog,
@@ -36,6 +36,6 @@
 
 <p>Generally unnecessary... The detailed log is not used to calculate the total views for each element.</p>
 <ul>
-    <li><strong>PRO:</strong> You have a detailed log of every view, which can then be accessed by another plugin via: <code>doublesecretagency\viewcount\records\ElementTotal</code></li>
+    <li><strong>PRO:</strong> You have a detailed log of every view, which can then be accessed by another plugin or module via: <code>doublesecretagency\viewcount\records\ElementTotal</code></li>
     <li><strong>CON:</strong> Any time Craft needs to create a backup database, it could take a very long time (depending on how big the views table gets).</li>
 </ul>

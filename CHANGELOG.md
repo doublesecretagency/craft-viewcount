@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.4 - 2020-08-19
+
+### Changed
+- Craft 3.5 is now required.
+
+### Fixed
+- Adjusted raw HTML output on settings page.
+
 ## 1.0.3 - 2020-03-26
 
 ### Fixed
