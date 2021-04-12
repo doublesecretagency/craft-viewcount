@@ -35,7 +35,5 @@
 {{ 'keepViewLog' in overrideKeys ? configWarning('keepViewLog') }}
 
 <p>Generally unnecessary... The detailed log is not used to calculate the total views for each element.</p>
-<ul>
-    <li><strong>PRO:</strong> You have a detailed log of every view, which can then be accessed by another plugin or module via: <code>doublesecretagency\viewcount\records\ElementTotal</code></li>
-    <li><strong>CON:</strong> Any time Craft needs to create a backup database, it could take a very long time (depending on how big the views table gets).</li>
-</ul>
+<p><strong>PRO:</strong> You have a detailed log of every view, which can then be accessed by another plugin or module via: <code>doublesecretagency\viewcount\records\ViewLog</code></p>
+<p><strong>CON:</strong> Any time Craft needs to create a backup database, it could take a very long time (depending on how big the views table gets).</p>
