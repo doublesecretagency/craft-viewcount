@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.5 - 2021-04-12
+
+### Changed
+- Updated settings message.
+
 ## 1.0.4 - 2020-08-19
 
 ### Changed
