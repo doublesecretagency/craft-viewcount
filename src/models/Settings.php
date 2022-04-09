@@ -20,7 +20,9 @@ use craft\base\Model;
 class Settings extends Model
 {
 
-    /** @var bool $keepViewLog Whether to keep a detailed log of all views. */
-    public $keepViewLog = false;
+    /**
+     * @var bool Whether to keep a detailed log of all views.
+     */
+    public bool $keepViewLog = false;
 
 }

@@ -15,7 +15,6 @@ use Craft;
 use craft\base\Component;
 use craft\elements\User;
 use craft\helpers\Json;
-
 use doublesecretagency\viewcount\ViewCount;
 
 /**
@@ -25,23 +24,46 @@ use doublesecretagency\viewcount\ViewCount;
 class ViewCountService extends Component
 {
 
-    public $userCookie = 'ViewHistory';
-    public $userCookieLifespan = 315569260; // Lasts 10 years
-    public $anonymousHistory = [];
-    public $loggedInHistory = [];
+    /**
+     * @var string Name of cookie containing the user history.
+     */
+    public string $userCookie = 'ViewHistory';
 
-    // Generate combined item key
-    public function setItemKey($elementId, $key)
+    /**
+     * @var int Length of time until user history cookie expires.
+     */
+    public int $userCookieLifespan = 315569260; // Lasts 10 years
+
+    /**
+     * @var array History of anonymous user.
+     */
+    public array $anonymousHistory = [];
+
+    /**
+     * @var array History of logged-in User.
+     */
+    public array $loggedInHistory = [];
+
+    /**
+     * Generate combined item key.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @return string
+     */
+    public function setItemKey(int $elementId, ?string $key): string
     {
         return $elementId.($key ? ':'.$key : '');
     }
 
-    // Get history of logged-in user
-    public function getUserHistory()
+    /**
+     * Load history of logged-in user.
+     */
+    public function getUserHistory(): void
     {
         // If table has not been created yet, bail
         if (!Craft::$app->getDb()->tableExists('{{%viewcount_userhistories}}')) {
-            return false;
+            return;
         }
 
         // Get current user
@@ -49,22 +71,24 @@ class ViewCountService extends Component
 
         // If no current user, bail
         if (!$currentUser) {
-            return false;
+            return;
         }
 
         // Get history of current user
         $this->loggedInHistory = ViewCount::$plugin->query->userHistory($currentUser->id);
     }
 
-    // Get history of anonymous user
-    public function getAnonymousHistory()
+    /**
+     * Load history of anonymous user.
+     */
+    public function getAnonymousHistory(): void
     {
         // Get request
         $request = Craft::$app->getRequest();
 
         // If running via command line, bail
         if ($request->getIsConsoleRequest()) {
-            return false;
+            return;
         }
 
         // Get cookies object
@@ -72,34 +96,39 @@ class ViewCountService extends Component
 
         // If cookie exists
         if ($cookies->has($this->userCookie)) {
-
             // Get anonymous history
             $cookieValue = $cookies->getValue($this->userCookie);
             $this->anonymousHistory = Json::decode($cookieValue);
-
         }
 
         // If no anonymous history
         if (!$this->anonymousHistory) {
-
             // Initialize anonymous history
             $this->anonymousHistory = [];
             ViewCount::$plugin->view->saveUserHistoryCookie();
-
         }
-
     }
 
-    // Check if a key is valid
-    public function validKey($key)
+    /**
+     * Whether a key is valid.
+     *
+     * @param null|string $key
+     * @return bool
+     */
+    public function validKey(?string $key): bool
     {
         return (null === $key || is_string($key) || is_numeric($key));
     }
 
     // ========================================================================= //
 
-    // $userId can be valid user ID or UserModel
-    public function validateUserId(&$userId)
+    /**
+     * Ensures we are working with a valid User ID.
+     * Will convert a User model into a User ID.
+     *
+     * @param null|int|User $userId
+     */
+    public function validateUserId(null|int|User &$userId): void
     {
         // No user by default
         $user = null;

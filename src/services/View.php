@@ -11,17 +11,15 @@
 
 namespace doublesecretagency\viewcount\services;
 
-use yii\web\Cookie;
-
 use Craft;
 use craft\base\Component;
 use craft\helpers\Json;
-
 use doublesecretagency\viewcount\ViewCount;
 use doublesecretagency\viewcount\events\ViewEvent;
 use doublesecretagency\viewcount\records\ElementTotal;
-use doublesecretagency\viewcount\records\ViewLog;
 use doublesecretagency\viewcount\records\UserHistory;
+use doublesecretagency\viewcount\records\ViewLog;
+use yii\web\Cookie;
 
 /**
  * Class View
@@ -30,14 +28,25 @@ use doublesecretagency\viewcount\records\UserHistory;
 class View extends Component
 {
 
-    /** @event ViewEvent The event that is triggered before a view. */
+    /**
+     * @event ViewEvent The event that is triggered before a view.
+     */
     const EVENT_BEFORE_VIEW = 'beforeView';
 
-    /** @event ViewEvent The event that is triggered after a view. */
+    /**
+     * @event ViewEvent The event that is triggered after a view.
+     */
     const EVENT_AFTER_VIEW = 'afterView';
 
-    //
-    public function increment($elementId, $key = null, $userId = null)
+    /**
+     * Increment the view counter for a given Element.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @param null|int $userId
+     * @return array
+     */
+    public function increment(int $elementId, ?string $key = null, ?int $userId = null): array
     {
         // Ensure the user ID is valid
         ViewCount::$plugin->viewCount->validateUserId($userId);
@@ -47,9 +56,9 @@ class View extends Component
 
         // Get data
         $data = [
-            'elementId' => (int) $elementId,
+            'elementId' => $elementId,
             'key'       => $key,
-            'userId'    => ($userId ? (int) $userId : null),
+            'userId'    => ($userId ?: null),
             'ipAddress' => $request->getUserIP(),
             'userAgent' => $request->getUserAgent(),
         ];
@@ -93,9 +102,12 @@ class View extends Component
     }
 
     /**
-     * Trigger event before a view
+     * Trigger event before a view.
+     *
+     * @param array $data
+     * @return bool
      */
-    public function beforeView($data): bool
+    public function beforeView(array $data): bool
     {
         $event = new ViewEvent($data);
         if ($this->hasEventHandlers(self::EVENT_BEFORE_VIEW)) {
@@ -106,9 +118,11 @@ class View extends Component
     }
 
     /**
-     * Trigger event after a view
+     * Trigger event after a view.
+     *
+     * @param array $data
      */
-    public function afterView($data)
+    public function afterView(array $data): void
     {
         $event = new ViewEvent($data);
         if ($this->hasEventHandlers(self::EVENT_AFTER_VIEW)) {
@@ -118,8 +132,15 @@ class View extends Component
 
     // ========================================================================= //
 
-    //
-    private function _updateUserHistoryDatabase($elementId, $key, $userId)
+    /**
+     * Update view history for the User in the database.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @param int $userId
+     * @return bool Whether a record was saved.
+     */
+    private function _updateUserHistoryDatabase(int $elementId, ?string $key, int $userId): bool
     {
         // If user is not logged in, return false
         if (!$userId) {
@@ -166,8 +187,13 @@ class View extends Component
         return $record->save();
     }
 
-    //
-    private function _updateUserHistoryCookie($elementId, $key)
+    /**
+     * Update view history for the User history cookie.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     */
+    private function _updateUserHistoryCookie(int $elementId, ?string $key): void
     {
         // Get item key
         $item = ViewCount::$plugin->viewCount->setItemKey($elementId, $key);
@@ -187,8 +213,10 @@ class View extends Component
         $this->saveUserHistoryCookie();
     }
 
-    //
-    public function saveUserHistoryCookie()
+    /**
+     * Save the history cookie.
+     */
+    public function saveUserHistoryCookie(): void
     {
         // Get cookie settings
         $cookieName = ViewCount::$plugin->viewCount->userCookie;
@@ -203,8 +231,14 @@ class View extends Component
         Craft::$app->getResponse()->getCookies()->add($cookie);
     }
 
-    //
-    private function _updateElementTotals($elementId, $key)
+    /**
+     * Update the view count total for a given Element.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @return bool
+     */
+    private function _updateElementTotals(int $elementId, ?string $key): bool
     {
         // Load existing element totals
         $record = ElementTotal::findOne([
@@ -227,8 +261,15 @@ class View extends Component
         return $record->save();
     }
 
-    //
-    private function _updateViewLog($elementId, $key, $userId)
+    /**
+     * Add a new record to the view log for a given interaction.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @param int $userId
+     * @return bool
+     */
+    private function _updateViewLog(int $elementId, ?string $key, int $userId): bool
     {
         // If not keeping a view log, bail
         if (!ViewCount::$plugin->getSettings()->keepViewLog) {

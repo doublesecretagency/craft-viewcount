@@ -86,8 +86,6 @@ class Install extends Migration
 
     /**
      * Adds the foreign keys.
-     *
-     * @return void
      */
     protected function addForeignKeys()
     {

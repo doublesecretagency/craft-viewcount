@@ -11,20 +11,19 @@
 
 namespace doublesecretagency\viewcount;
 
-use yii\base\Event;
-
 use Craft;
+use craft\base\Model;
 use craft\base\Plugin;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Fields;
 use craft\web\twig\variables\CraftVariable;
-
 use doublesecretagency\viewcount\fields\TotalViews;
 use doublesecretagency\viewcount\models\Settings;
-use doublesecretagency\viewcount\services\ViewCountService;
 use doublesecretagency\viewcount\services\Query;
 use doublesecretagency\viewcount\services\View;
+use doublesecretagency\viewcount\services\ViewCountService;
 use doublesecretagency\viewcount\variables\ViewCountVariable;
+use yii\base\Event;
 
 /**
  * Class ViewCount
@@ -33,17 +32,25 @@ use doublesecretagency\viewcount\variables\ViewCountVariable;
 class ViewCount extends Plugin
 {
 
-    /** @var Plugin $plugin Self-referential plugin property. */
-    public static $plugin;
+    /**
+     * @var ViewCount Self-referential plugin property.
+     */
+    public static ViewCount $plugin;
 
-    /** @var bool $hasCpSettings The plugin has a settings page. */
-    public $hasCpSettings = true;
+    /**
+     * @inheritdoc
+     */
+    public bool $hasCpSettings = true;
 
-    /** @var bool $schemaVersion Current schema version of the plugin. */
-    public $schemaVersion = '1.0.0';
+    /**
+     * @inheritdoc
+     */
+    public string $schemaVersion = '1.0.0';
 
-    /** @inheritDoc */
-    public function init()
+    /**
+     * @inheritdoc
+     */
+    public function init(): void
     {
         parent::init();
         self::$plugin = $this;
@@ -85,17 +92,17 @@ class ViewCount extends Plugin
     }
 
     /**
-     * @return Settings Plugin settings model.
+     * @inheritdoc
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?Model
     {
         return new Settings();
     }
 
     /**
-     * @return string The fully rendered settings template.
+     * @inheritdoc
      */
-    protected function settingsHtml(): string
+    protected function settingsHtml(): ?string
     {
         $view = Craft::$app->getView();
         $overrideKeys = array_keys(Craft::$app->getConfig()->getConfigFromFile('view-count'));

@@ -11,16 +11,14 @@
 
 namespace doublesecretagency\viewcount\services;
 
-use craft\helpers\Json;
-use yii\db\Expression;
-
-use Craft;
 use craft\base\Component;
+use craft\db\Query as CraftQuery;
 use craft\elements\db\ElementQuery;
-
+use craft\helpers\Json;
 use doublesecretagency\viewcount\ViewCount;
 use doublesecretagency\viewcount\records\ElementTotal;
 use doublesecretagency\viewcount\records\UserHistory;
+use yii\db\Expression;
 
 /**
  * Class Query
@@ -29,8 +27,14 @@ use doublesecretagency\viewcount\records\UserHistory;
 class Query extends Component
 {
 
-    //
-    public function total($elementId, $key = null): int
+    /**
+     * Get the total number of views for a given Element.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @return int
+     */
+    public function total(int $elementId, ?string $key = null): int
     {
         $record = ElementTotal::findOne([
             'elementId' => $elementId,
@@ -39,10 +43,15 @@ class Query extends Component
         return ($record ? $record->viewTotal : 0);
     }
 
-    // ========================================================================
+    // ========================================================================= //
 
-    //
-    public function userHistory($userId = null): array
+    /**
+     * Get complete view history of a given User.
+     *
+     * @param null|int $userId
+     * @return array
+     */
+    public function userHistory(?int $userId = null): array
     {
         if (!$userId) {
             return [];
@@ -56,15 +65,20 @@ class Query extends Component
         return Json::decode($record->history);
     }
 
-    //
-    public function orderByViews(ElementQuery $query, $key = null)
+    /**
+     * Sort the query by most viewed elements.
+     *
+     * @param ElementQuery $query
+     * @param null|string $key
+     */
+    public function orderByViews(ElementQuery $query, ?string $key = null): void
     {
         // Collect and sort elementIds
         $elementIds = $this->_elementIdsByViews($key);
 
         // If no element IDs, bail
         if (!$elementIds) {
-            return false;
+            return;
         }
 
         // Match order to elementIds
@@ -72,12 +86,17 @@ class Query extends Component
         $query->orderBy = [new Expression("field([[elements.id]], {$ids}) desc")];
     }
 
-    //
-    private function _elementIdsByViews($key)
+    /**
+     * Collect and sort the element IDs.
+     *
+     * @param null|string $key
+     * @return null|array
+     */
+    private function _elementIdsByViews(?string $key): ?array
     {
         // If key isn't valid, bail
         if (!ViewCount::$plugin->viewCount->validKey($key)) {
-            return false;
+            return null;
         }
 
         // Adjust conditions based on whether a key was provided
@@ -92,7 +111,7 @@ class Query extends Component
         $order = "{$total} desc, [[elements.id]] desc";
 
         // Join with elements table to sort by total
-        $elementIds = (new craft\db\Query())
+        $elementIds = (new CraftQuery())
             ->select('[[elements.id]]')
             ->from('{{%elements}} elements')
             ->where($conditions)

@@ -21,22 +21,39 @@ use doublesecretagency\viewcount\ViewCount;
 class ViewCountVariable
 {
 
-    // Output total views of element
-    public function total($elementId, $key = null)
+    /**
+     * Output total views of element.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @return int
+     */
+    public function total(int $elementId, ?string $key = null): int
     {
         return ViewCount::$plugin->query->total($elementId, $key);
     }
 
-    // ========================================================================
+    // ========================================================================= //
 
-    // Increment view count
-    public function increment($elementId, $key = null, $userId = null)
+    /**
+     * Increment view count.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @param null|int $userId
+     */
+    public function increment(int $elementId, ?string $key = null, ?int $userId = null): void
     {
         ViewCount::$plugin->view->increment($elementId, $key, $userId);
     }
 
-    // Sort by "most viewed"
-    public function sort(ElementQuery $elements, $key = null)
+    /**
+     * Sort by "most viewed".
+     *
+     * @param ElementQuery $elements
+     * @param null|string $key
+     */
+    public function sort(ElementQuery $elements, ?string $key = null): void
     {
         ViewCount::$plugin->query->orderByViews($elements, $key);
     }

@@ -15,9 +15,8 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\base\PreviewableFieldInterface;
-
-use doublesecretagency\viewcount\web\assets\FieldInputAssets;
 use doublesecretagency\viewcount\ViewCount;
+use doublesecretagency\viewcount\web\assets\FieldInputAssets;
 
 /**
  * Class TotalViews
@@ -27,9 +26,9 @@ class TotalViews extends Field implements PreviewableFieldInterface
 {
 
     /**
-     * @var string|null
+     * @var null|string Optional string to allow multiple votes per element.
      */
-    public $viewKey;
+    public ?string $viewKey = null;
 
     // ========================================================================= //
 
@@ -58,7 +57,7 @@ class TotalViews extends Field implements PreviewableFieldInterface
      *
      * @inheritdoc
      */
-    public function normalizeValue($value, ElementInterface $element = null)
+    public function normalizeValue(mixed $value, ?ElementInterface $element = null): mixed
     {
         return $this->_getTotal($element);
     }
@@ -68,7 +67,7 @@ class TotalViews extends Field implements PreviewableFieldInterface
     /**
      * @inheritdoc
      */
-    public function getSettingsHtml(): string
+    public function getSettingsHtml(): ?string
     {
         return Craft::$app->getView()->renderTemplate('view-count/fields/totalviews-settings', [
             'settings' => $this->getSettings()
@@ -78,7 +77,7 @@ class TotalViews extends Field implements PreviewableFieldInterface
     /**
      * @inheritdoc
      */
-    public function getInputHtml($value, ElementInterface $element = null): string
+    public function getInputHtml(mixed $value, ?ElementInterface $element = null): string
     {
         $view = Craft::$app->getView();
         $view->registerAssetBundle(FieldInputAssets::class);
@@ -90,7 +89,7 @@ class TotalViews extends Field implements PreviewableFieldInterface
     /**
      * @inheritdoc
      */
-    public function getTableAttributeHtml($value, ElementInterface $element): string
+    public function getTableAttributeHtml(mixed $value, ElementInterface $element): string
     {
         return Craft::$app->getView()->renderTemplate('view-count/fields/totalviews-column', [
             'totalViews' => $this->_getTotal($element)
@@ -100,12 +99,12 @@ class TotalViews extends Field implements PreviewableFieldInterface
     // ========================================================================= //
 
     /**
-     * Get total views of element
+     * Get total views of specified element.
      *
-     * @param $element
+     * @param null|ElementInterface $element
      * @return float
      */
-    private function _getTotal($element): float
+    private function _getTotal(?ElementInterface $element): float
     {
         // If no element, return value of zero
         if (!$element) {
@@ -113,7 +112,7 @@ class TotalViews extends Field implements PreviewableFieldInterface
         }
 
         // Get the view key (if one exists)
-        $viewKey = ($this->viewKey ? $this->viewKey : null);
+        $viewKey = ($this->viewKey ?: null);
 
         // Return the view total
         return ViewCount::$plugin->query->total($element->id, $viewKey);

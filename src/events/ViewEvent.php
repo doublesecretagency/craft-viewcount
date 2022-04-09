@@ -20,19 +20,29 @@ use craft\events\CancelableEvent;
 class ViewEvent extends CancelableEvent
 {
 
-    /** @var int|null The element ID for the item being viewed. */
-    public $elementId;
+    /**
+     * @var null|int The element ID for the item being viewed.
+     */
+    public ?int $elementId;
 
-    /** @var string|null An optional key. */
-    public $key;
+    /**
+     * @var null|string An optional key.
+     */
+    public ?string $key;
 
-    /** @var int|null ID of user who viewed (null if anonymous). */
-    public $userId;
+    /**
+     * @var null|int ID of user who viewed (null if anonymous).
+     */
+    public ?int $userId;
 
-    /** @var string|null IP address of visitor. */
-    public $ipAddress;
+    /**
+     * @var null|string IP address of visitor.
+     */
+    public ?string $ipAddress;
 
-    /** @var string|null User agent of visitor. */
-    public $userAgent;
+    /**
+     * @var null|string User agent of visitor.
+     */
+    public ?string $userAgent;
 
 }

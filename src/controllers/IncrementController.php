@@ -13,7 +13,6 @@ namespace doublesecretagency\viewcount\controllers;
 
 use Craft;
 use craft\web\Controller;
-
 use doublesecretagency\viewcount\ViewCount;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
@@ -25,14 +24,10 @@ use yii\web\Response;
 class IncrementController extends Controller
 {
 
-    // Protected Properties
-    // =========================================================================
-
     /**
-     * @var    bool|array Allows anonymous access to this controller's actions.
-     * @access protected
+     * @inheritdoc
      */
-    protected $allowAnonymous = true;
+    protected array|bool|int $allowAnonymous = true;
 
     /**
      * Increment view counter.
