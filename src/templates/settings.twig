@@ -1,7 +1,7 @@
 {% import '_includes/forms' as forms %}
 
 {% macro configWarning(setting) -%}
-    {% set docsUrl = 'https://www.doublesecretagency.com/plugins/view-count/docs/override-settings' %}
+    {% set docsUrl = 'https://plugins.doublesecretagency.com/view-count/detailed-view-log/' %}
     <p class="warning">
         {{ "This is being overridden by the {setting} config setting."|t('app', {
             setting: '<a href="'~docsUrl~'" target="_blank">'~setting~'</a>'
