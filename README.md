@@ -1,11 +1,14 @@
-View Count plugin for Craft CMS
-===============================
+<img align="left" src="https://plugins.doublesecretagency.com/view-count/images/icon.svg" alt="Plugin icon">
 
-Count the number of times an element has been viewed.
+# View Count plugin for Craft CMS
+
+**Count the number of times an element has been viewed.**
+
+---
 
 ![](src/resources/img/example-totalviews.png)
 
-***
+---
 
 ## Track views via Twig, PHP, or AJAX
 
@@ -43,10 +46,16 @@ They do [exactly what you think...](https://plugins.doublesecretagency.com/view-
  
 Within the `EVENT_BEFORE_VIEW` event, you can prevent the view from being counted.
 
-***
+---
 
-## Anything else?
+## Further Reading
 
-We've got other plugins too!
+If you haven't already, flip through the [complete plugin documentation](https://plugins.doublesecretagency.com/view-count/).
 
-Check out the full catalog at [doublesecretagency.com/plugins](https://www.doublesecretagency.com/plugins)
+And if you have any remaining questions, feel free to [reach out to us](https://www.doublesecretagency.com/contact) (via Discord is preferred).
+
+**On behalf of Double Secret Agency, thanks for checking out our plugin!** 🍺
+
+<p align="center">
+    <img width="130" src="https://www.doublesecretagency.com/resources/images/dsa-transparent.png" alt="Logo for Double Secret Agency">
+</p>
