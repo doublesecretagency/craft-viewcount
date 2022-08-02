@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 - 2022-08-02
+
+### Fixed
+- Fixed bug which occurred when user was not logged in.
+- Fixed bug where field type prevented new elements from being created.
+
 ## 1.1.0 - 2022-04-09
 
 ### Added
