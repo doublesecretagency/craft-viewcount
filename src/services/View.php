@@ -137,10 +137,10 @@ class View extends Component
      *
      * @param int $elementId
      * @param null|string $key
-     * @param int $userId
+     * @param null|int $userId
      * @return bool Whether a record was saved.
      */
-    private function _updateUserHistoryDatabase(int $elementId, ?string $key, int $userId): bool
+    private function _updateUserHistoryDatabase(int $elementId, ?string $key, ?int $userId): bool
     {
         // If user is not logged in, return false
         if (!$userId) {
@@ -266,10 +266,10 @@ class View extends Component
      *
      * @param int $elementId
      * @param null|string $key
-     * @param int $userId
+     * @param null|int $userId
      * @return bool
      */
-    private function _updateViewLog(int $elementId, ?string $key, int $userId): bool
+    private function _updateViewLog(int $elementId, ?string $key, ?int $userId): bool
     {
         // If not keeping a view log, bail
         if (!ViewCount::$plugin->getSettings()->keepViewLog) {
