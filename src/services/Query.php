@@ -30,16 +30,22 @@ class Query extends Component
     /**
      * Get the total number of views for a given Element.
      *
-     * @param int $elementId
+     * @param null|int $elementId
      * @param null|string $key
      * @return int
      */
-    public function total(int $elementId, ?string $key = null): int
+    public function total(?int $elementId, ?string $key = null): int
     {
+        // No ID for newly created elements
+        if (!$elementId) {
+            return 0;
+        }
+        // Get existing record
         $record = ElementTotal::findOne([
             'elementId' => $elementId,
             'viewKey'   => $key,
         ]);
+        // Return total number of views
         return ($record ? $record->viewTotal : 0);
     }
 
