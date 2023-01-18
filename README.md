@@ -6,7 +6,9 @@
 
 ---
 
-![](src/resources/img/example-totalviews.png)
+<p align="center">
+    <img width="370" alt="Example of View Count results" src="https://github.com/doublesecretagency/craft-viewcount/raw/ff0f22bf4114498efa07430a3ac1fe8d39c5c2be/src/resources/img/example-totalviews.png">
+</p>
 
 ---
 
