@@ -125,6 +125,56 @@ class View extends Component
     // ========================================================================= //
 
     /**
+     * Set a counter to the specified integer.
+     *
+     * @param int $newValue
+     * @param int $elementId
+     * @param null|string $key
+     * @return bool Whether setting the counter was successful.
+     */
+    public function setCounter(int $newValue, int $elementId, ?string $key = null): bool
+    {
+        // Load existing element totals
+        $record = ElementTotal::findOne([
+            'elementId' => $elementId,
+            'viewKey'   => $key,
+        ]);
+
+        // If no totals record exists, create new
+        if (!$record) {
+            $record = new ElementTotal;
+            $record->elementId = $elementId;
+            $record->viewKey   = $key;
+        }
+
+        // New value must be zero or greater
+        if ($newValue < 0) {
+            $newValue = 0;
+        }
+
+        // Set the new value
+        $record->viewTotal = $newValue;
+
+        // Save
+        return $record->save();
+    }
+
+    /**
+     * Reset a counter to zero.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @return bool Whether resetting the counter was successful.
+     */
+    public function resetCounter(int $elementId, ?string $key = null): bool
+    {
+        // Set the counter to zero
+        return $this->setCounter(0, $elementId, $key);
+    }
+
+    // ========================================================================= //
+
+    /**
      * Trigger event before a view.
      *
      * @param array $data

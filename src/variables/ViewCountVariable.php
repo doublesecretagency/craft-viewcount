@@ -59,6 +59,35 @@ class ViewCountVariable
         ViewCount::$plugin->view->decrement($elementId, $key, $userId);
     }
 
+    // ========================================================================= //
+
+    /**
+     * Set a counter to the specified integer.
+     *
+     * @param int $newValue
+     * @param int $elementId
+     * @param null|string $key
+     * @return bool Whether setting the counter was successful.
+     */
+    public function setCounter(int $newValue, int $elementId, ?string $key = null): bool
+    {
+        return ViewCount::$plugin->view->setCounter($newValue, $elementId, $key);
+    }
+
+    /**
+     * Reset a counter to zero.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @return bool Whether resetting the counter was successful.
+     */
+    public function resetCounter(int $elementId, ?string $key = null): bool
+    {
+        return ViewCount::$plugin->view->resetCounter($elementId, $key);
+    }
+
+    // ========================================================================= //
+
     /**
      * Sort by "most viewed".
      *

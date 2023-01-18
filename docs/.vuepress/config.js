@@ -34,6 +34,7 @@ module.exports = {
                 items: [
                     {text: 'How to increment the counter', link: '/how-to-increment-the-counter/'},
                     {text: 'How to decrement the counter', link: '/how-to-decrement-the-counter/'},
+                    {text: 'Setting or resetting a counter', link: '/setting-or-resetting-a-counter/'},
                     {text: 'Using a unique key', link: '/using-a-unique-key/'},
                     {text: 'Sort by most viewed', link: '/sort-by-most-viewed/'},
                     {text: 'Get view totals per Element', link: '/get-view-totals-per-element/'},
@@ -56,6 +57,7 @@ module.exports = {
                 'getting-started',
                 'how-to-increment-the-counter',
                 'how-to-decrement-the-counter',
+                'setting-or-resetting-a-counter',
                 'using-a-unique-key',
                 'sort-by-most-viewed',
                 'get-view-totals-per-element',

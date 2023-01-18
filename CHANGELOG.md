@@ -3,7 +3,9 @@
 ## Unreleased
 
 ### Added
-- Added methods to [`decrement`](https://plugins.doublesecretagency.com/view-count/how-to-decrement-the-counter/) a counter. ([#15](https://github.com/doublesecretagency/craft-viewcount/issues/15))
+- Added Twig/PHP methods to [`decrement`](https://plugins.doublesecretagency.com/view-count/how-to-decrement-the-counter/) a counter. ([#15](https://github.com/doublesecretagency/craft-viewcount/issues/15))
+- Added Twig/PHP methods to [`setCounter`](https://plugins.doublesecretagency.com/view-count/setting-or-resetting-a-counter/). ([#23](https://github.com/doublesecretagency/craft-viewcount/issues/23))
+- Added Twig/PHP methods to [`resetCounter`](https://plugins.doublesecretagency.com/view-count/setting-or-resetting-a-counter/). ([#2](https://github.com/doublesecretagency/craft-viewcount/issues/2))
 
 ## 1.1.1 - 2022-08-02
 
