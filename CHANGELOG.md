@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Added methods to [`decrement`](https://plugins.doublesecretagency.com/view-count/how-to-decrement-the-counter/) a counter. ([#15](https://github.com/doublesecretagency/craft-viewcount/issues/15))
+
 ## 1.1.1 - 2022-08-02
 
 ### Fixed

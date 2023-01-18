@@ -44,9 +44,10 @@ class View extends Component
      * @param int $elementId
      * @param null|string $key
      * @param null|int $userId
+     * @param bool $decrement
      * @return array
      */
-    public function increment(int $elementId, ?string $key = null, ?int $userId = null): array
+    public function increment(int $elementId, ?string $key = null, ?int $userId = null, bool $decrement = false): array
     {
         // Ensure the user ID is valid
         ViewCount::$plugin->viewCount->validateUserId($userId);
@@ -63,26 +64,32 @@ class View extends Component
             'userAgent' => $request->getUserAgent(),
         ];
 
-        // Trigger event before a view
-        if (!$this->beforeView($data)) {
-            // Bail if necessary
-            return [
-                'success' => false,
-                'error' => 'View prevented by custom event.',
-                'data' => $data,
-            ];
+        // If not decrementing the counter
+        if (!$decrement) {
+            // Trigger event before a view
+            if (!$this->beforeView($data)) {
+                // Bail if necessary
+                return [
+                    'success' => false,
+                    'error' => 'View prevented by custom event.',
+                    'data' => $data,
+                ];
+            }
         }
 
         // Update element total
-        $totalSuccess = $this->_updateElementTotals($elementId, $key);
-        $logSuccess   = $this->_updateViewLog($elementId, $key, $userId);
+        $totalSuccess = $this->_updateElementTotals($elementId, $key, $decrement);
+        $logSuccess = $this->_updateViewLog($elementId, $key, $userId, $decrement);
 
         // Update user histories
-        $this->_updateUserHistoryDatabase($elementId, $key, $userId);
-        $this->_updateUserHistoryCookie($elementId, $key);
+        $this->_updateUserHistoryDatabase($elementId, $key, $userId, $decrement);
+        $this->_updateUserHistoryCookie($elementId, $key, $decrement);
 
-        // Trigger event after a view
-        $this->afterView($data);
+        // If not decrementing the counter
+        if (!$decrement) {
+            // Trigger event after a view
+            $this->afterView($data);
+        }
 
         // Basic error check
         if (!$totalSuccess) {
@@ -100,6 +107,22 @@ class View extends Component
             'data' => $data,
         ];
     }
+
+    /**
+     * Decrement the view counter for a given Element.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @param null|int $userId
+     * @return array
+     */
+    public function decrement(int $elementId, ?string $key = null, ?int $userId = null): array
+    {
+        // Increment, but with the decrement flag
+        return $this->increment($elementId, $key, $userId, true);
+    }
+
+    // ========================================================================= //
 
     /**
      * Trigger event before a view.
@@ -138,9 +161,10 @@ class View extends Component
      * @param int $elementId
      * @param null|string $key
      * @param null|int $userId
+     * @param bool $decrement
      * @return bool Whether a record was saved.
      */
-    private function _updateUserHistoryDatabase(int $elementId, ?string $key, ?int $userId): bool
+    private function _updateUserHistoryDatabase(int $elementId, ?string $key, ?int $userId, bool $decrement): bool
     {
         // If user is not logged in, return false
         if (!$userId) {
@@ -177,8 +201,8 @@ class View extends Component
             $history[$item] = 0;
         }
 
-        // Increment view count
-        $history[$item]++;
+        // Adjust value according to whether it is increment/decrement
+        $history[$item] = $this->_adjustValue($history[$item], $decrement);
 
         // Save history record
         $record->history = $history;
@@ -192,8 +216,9 @@ class View extends Component
      *
      * @param int $elementId
      * @param null|string $key
+     * @param bool $decrement
      */
-    private function _updateUserHistoryCookie(int $elementId, ?string $key): void
+    private function _updateUserHistoryCookie(int $elementId, ?string $key, bool $decrement): void
     {
         // Get item key
         $item = ViewCount::$plugin->viewCount->setItemKey($elementId, $key);
@@ -206,8 +231,8 @@ class View extends Component
             $history[$item] = 0;
         }
 
-        // Increment view count
-        $history[$item]++;
+        // Adjust value according to whether it is increment/decrement
+        $history[$item] = $this->_adjustValue($history[$item], $decrement);
 
         // Save
         $this->saveUserHistoryCookie();
@@ -236,9 +261,10 @@ class View extends Component
      *
      * @param int $elementId
      * @param null|string $key
+     * @param bool $decrement
      * @return bool
      */
-    private function _updateElementTotals(int $elementId, ?string $key): bool
+    private function _updateElementTotals(int $elementId, ?string $key, bool $decrement): bool
     {
         // Load existing element totals
         $record = ElementTotal::findOne([
@@ -254,8 +280,8 @@ class View extends Component
             $record->viewTotal = 0;
         }
 
-        // Update view count
-        $record->viewTotal++;
+        // Adjust value according to whether it is increment/decrement
+        $record->viewTotal = $this->_adjustValue($record->viewTotal, $decrement);
 
         // Save
         return $record->save();
@@ -267,12 +293,18 @@ class View extends Component
      * @param int $elementId
      * @param null|string $key
      * @param null|int $userId
+     * @param bool $decrement
      * @return bool
      */
-    private function _updateViewLog(int $elementId, ?string $key, ?int $userId): bool
+    private function _updateViewLog(int $elementId, ?string $key, ?int $userId, bool $decrement): bool
     {
         // If not keeping a view log, bail
         if (!ViewCount::$plugin->getSettings()->keepViewLog) {
+            return true;
+        }
+
+        // If decrementing the counter, bail
+        if ($decrement) {
             return true;
         }
 
@@ -290,5 +322,32 @@ class View extends Component
         // Save
         return $record->save();
     }
+
+    /**
+     * Adjust the value up or down accordingly.
+     *
+     * @param int $value
+     * @param bool $decrement
+     * @return int
+     */
+    public function _adjustValue(int $value, bool $decrement): int
+    {
+        // If decrement flag was set
+        if ($decrement) {
+            // Decrement view count
+            $value--;
+        } else {
+            // Increment view count
+            $value++;
+        }
+
+        // Can't be less than zero
+        if ($value < 0) {
+            $value = 0;
+        }
+
+        return $value;
+    }
+
 
 }

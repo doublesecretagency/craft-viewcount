@@ -48,6 +48,18 @@ class ViewCountVariable
     }
 
     /**
+     * Decrement view count.
+     *
+     * @param int $elementId
+     * @param null|string $key
+     * @param null|int $userId
+     */
+    public function decrement(int $elementId, ?string $key = null, ?int $userId = null): void
+    {
+        ViewCount::$plugin->view->decrement($elementId, $key, $userId);
+    }
+
+    /**
      * Sort by "most viewed".
      *
      * @param ElementQuery $elements
