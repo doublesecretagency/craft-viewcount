@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 - 2023-03-01
 
 ### Added
 - Added Twig/PHP methods to [`decrement`](https://plugins.doublesecretagency.com/view-count/how-to-decrement-the-counter/) a counter. ([#15](https://github.com/doublesecretagency/craft-viewcount/issues/15))
