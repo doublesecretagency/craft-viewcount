@@ -254,7 +254,18 @@ class View extends Component
         // Adjust value according to whether it is increment/decrement
         $history[$item] = $this->_adjustValue($history[$item], $decrement);
 
-        // Save history record
+        // If the value is zero, remove it
+        if (0 === $history[$item]) {
+            unset($history[$item]);
+        }
+
+        // If no history
+        if (!$history) {
+            // Delete the record
+            return $record->delete();
+        }
+
+        // Update history record
         $record->history = $history;
 
         // Save
@@ -283,6 +294,11 @@ class View extends Component
 
         // Adjust value according to whether it is increment/decrement
         $history[$item] = $this->_adjustValue($history[$item], $decrement);
+
+        // If the value is zero, remove it
+        if (0 === $history[$item]) {
+            unset($history[$item]);
+        }
 
         // Save
         $this->saveUserHistoryCookie();
@@ -333,7 +349,13 @@ class View extends Component
         // Adjust value according to whether it is increment/decrement
         $record->viewTotal = $this->_adjustValue($record->viewTotal, $decrement);
 
-        // Save
+        // If the value is zero
+        if (0 === $record->viewTotal) {
+            // Delete the record
+            return $record->delete();
+        }
+
+        // Save with new value
         return $record->save();
     }
 

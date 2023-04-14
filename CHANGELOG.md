@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Remove elements with zero views from cookie and database.
+
 ## 1.2.0 - 2023-03-01
 
 ### Added
