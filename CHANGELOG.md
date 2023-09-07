@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed bug which caused excessive logging from the `Craft::$app->user->getIdentity()` method. ([#27](https://github.com/doublesecretagency/craft-viewcount/issues/27))
+
 ## 1.2.1 - 2023-04-14
 
 ### Changed

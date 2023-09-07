@@ -16,6 +16,7 @@ use craft\base\Model;
 use craft\base\Plugin;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Fields;
+use craft\web\Application;
 use craft\web\twig\variables\CraftVariable;
 use doublesecretagency\viewcount\fields\TotalViews;
 use doublesecretagency\viewcount\models\Settings;
@@ -65,10 +66,16 @@ class ViewCount extends Plugin
         // Load anonymous history
         $this->viewCount->getAnonymousHistory();
 
-        // If logged-in, load user history
-        if (Craft::$app->user->getIdentity()) {
-            $this->viewCount->getUserHistory();
-        }
+        // Once the app is fully initialized
+        Craft::$app->on(
+            Application::EVENT_INIT,
+            function () {
+                // If logged-in, load user history
+                if (Craft::$app->user->getIdentity()) {
+                    $this->viewCount->getUserHistory();
+                }
+            }
+        );
 
         // Register field types
         Event::on(
