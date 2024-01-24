@@ -6,12 +6,20 @@ description: The optional `key` parameter allows you to keep track of different 
 
 The optional `key` parameter allows you to keep track of different view types for the same element.
 
-You set the key when [triggering a view](/how-to-increment-the-counter/).
+You set the key when [incrementing a view counter](/how-to-increment-the-counter/).
 
 ```twig
-{{ craft.viewCount.view(article.id, 'startedReading') }}
-{{ craft.viewCount.view(article.id, 'finishedReading') }}
-{{ craft.viewCount.view(article.id, 'watchedVideo') }}
+{% do craft.viewCount.increment(elementId, 'startedReading') %}
+{% do craft.viewCount.increment(elementId, 'finishedReading') %}
+{% do craft.viewCount.increment(elementId, 'watchedVideo') %}
+```
+
+And conversely, when you [get the view total](/get-view-totals-per-element/).
+
+```twig
+{{ craft.viewCount.total(elementId, 'startedReading') }}
+{{ craft.viewCount.total(elementId, 'finishedReading') }}
+{{ craft.viewCount.total(elementId, 'watchedVideo') }}
 ```
 
 :::warning More than just a view counter
