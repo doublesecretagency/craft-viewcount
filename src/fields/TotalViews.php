@@ -89,7 +89,7 @@ class TotalViews extends Field implements PreviewableFieldInterface
     /**
      * @inheritdoc
      */
-    public function getTableAttributeHtml(mixed $value, ElementInterface $element): string
+    public function getPreviewHtml(mixed $value, ElementInterface $element): string
     {
         return Craft::$app->getView()->renderTemplate('view-count/fields/totalviews-column', [
             'totalViews' => $this->_getTotal($element)
