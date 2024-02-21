@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Improved performance of `sort` method for larger datasets.
+
 ## 1.2.2 - 2023-09-13
 
 ### Fixed

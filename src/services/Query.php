@@ -80,7 +80,7 @@ class Query extends Component
     public function orderByViews(ElementQuery $query, ?string $key = null): void
     {
         // Collect and sort elementIds
-        $elementIds = $this->_elementIdsByViews($key);
+        $elementIds = $this->_elementIdsByViews($query, $key);
 
         // If no element IDs, bail
         if (!$elementIds) {
@@ -95,10 +95,11 @@ class Query extends Component
     /**
      * Collect and sort the element IDs.
      *
+     * @param ElementQuery $query
      * @param null|string $key
      * @return null|array
      */
-    private function _elementIdsByViews(?string $key): ?array
+    private function _elementIdsByViews(ElementQuery $query, ?string $key): ?array
     {
         // If key isn't valid, bail
         if (!ViewCount::$plugin->viewCount->validKey($key)) {
@@ -121,6 +122,7 @@ class Query extends Component
             ->select('[[elements.id]]')
             ->from('{{%elements}} elements')
             ->where($conditions)
+            ->andWhere(['[[elements.type]]' => $query->elementType])
             ->leftJoin('{{%viewcount_elementtotals}} totals', '[[elements.id]] = [[totals.elementId]]')
             ->orderBy([new Expression($order)])
             ->column();
