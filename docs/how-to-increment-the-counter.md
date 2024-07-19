@@ -70,6 +70,46 @@ function incrementView(elementId, key) {
 
 }
 ```
+## JavaScript - via Fetch
+
+Here's another example using Vanilla Javascript and retrieving CSRF token from Blitz
+
+```js
+  
+  const csrfTokenUrl = '/actions/blitz/csrf/token';
+  const incrementViewCountUrl = '/actions/view-count/increment';
+
+  var data = {
+    'id': {{ entry.id }},
+  };
+
+  async function fetchData() {
+    try {
+      const csrfToken = await fetch(csrfTokenUrl).then(response => response.text());
+
+      const requestData = {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-Token': csrfToken,
+        },
+      };
+
+      const response = await fetch(incrementViewCountUrl, requestData);
+      const jsonResponse = await response.json();
+
+      console.log(jsonResponse);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  fetchData();
+```
 
 :::warning No userId for AJAX calls
 For security reasons, **you cannot control the `userId` value when submitting via AJAX**. It will always default to the currently logged-in user, or _null_ if not logged in.
