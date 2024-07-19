@@ -1,5 +1,5 @@
 ---
-description: There are three ways to increment a view counter... (1) On page load in Twig. (2) Manually via AJAX. (3) Manually via PHP.
+description: There are three ways to increment a view counter... (1) On page load in Twig. (2) Manually via JavaScript. (3) Manually via PHP.
 ---
 
 # How to increment the counter
@@ -11,20 +11,6 @@ There are three easy ways to increment a view counter. Each method uses the same
 | `elementId` | The ID of whatever element (Entry, Asset, User, etc) you want to record views of.
 | `key`       | (optional) A custom string to allow multiple view types for the same element.
 | `userId`    | (optional) A specific user to associate this view with. Will default to the ID of the currently logged-in user, or null if not logged in.
-
----
----
-
-## PHP - Call from a custom plugin or module
-
-Under the hood, each method of incrementing the counter relies on this PHP function:
-
-```php
-ViewCount::$plugin->view->increment($elementId, $key = null, $userId = null);
-```
-
----
----
 
 ## Twig - On page load
 
@@ -40,8 +26,13 @@ All parameters are available at the Twig level:
 {% do craft.viewCount.increment(elementId, key, userId) %}
 ```
 
----
----
+## PHP - Call from a custom plugin or module
+
+Under the hood, each method of incrementing the counter relies on this PHP function:
+
+```php
+ViewCount::$plugin->view->increment($elementId, $key = null, $userId = null);
+```
 
 ## JavaScript - Trigger via AJAX
 
@@ -59,7 +50,7 @@ function incrementView(elementId, key) {
     // Append CSRF Token
     data[window.csrfTokenName] = window.csrfTokenValue;
 
-    // Render search results
+    // Increment the view count
     $.post(
         'actions/view-count/increment',
         data,
@@ -70,45 +61,54 @@ function incrementView(elementId, key) {
 
 }
 ```
-## JavaScript - via Fetch
 
-Here's another example using Vanilla Javascript and retrieving CSRF token from Blitz
+## JavaScript - Trigger via Fetch (using Blitz)
+
+Here's another example using vanilla Javascript to fetch a CSRF token from the Blitz plugin:
 
 ```js
-  
-  const csrfTokenUrl = '/actions/blitz/csrf/token';
-  const incrementViewCountUrl = '/actions/view-count/increment';
+// Action URLs
+const csrfTokenUrl = '/actions/blitz/csrf/token';
+const incrementViewCountUrl = '/actions/view-count/increment';
 
-  var data = {
-    'id': {{ entry.id }},
-  };
+// Set view data
+var data = {
+    'id': elementId,
+    'key': key
+};
 
-  async function fetchData() {
+// Async function for incrementing the view count
+async function incrementView() {
     try {
-      const csrfToken = await fetch(csrfTokenUrl).then(response => response.text());
+        
+        // Fetch the CSRF token
+        const csrfToken = await fetch(csrfTokenUrl).then(response => response.text());
 
-      const requestData = {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-Token': csrfToken,
-        },
-      };
+        // Compile request data
+        const requestData = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-Token': csrfToken,
+            },
+        };
 
-      const response = await fetch(incrementViewCountUrl, requestData);
-      const jsonResponse = await response.json();
+        // Get the response
+        const response = await fetch(incrementViewCountUrl, requestData);
+        const jsonResponse = await response.json();
 
-      console.log(jsonResponse);
+        console.log(jsonResponse);
 
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
-  }
+}
 
-  fetchData();
+// Increment the view count
+incrementView();
 ```
 
 :::warning No userId for AJAX calls
